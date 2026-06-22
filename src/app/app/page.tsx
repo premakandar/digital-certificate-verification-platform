@@ -38,8 +38,9 @@ export default function AppPage() {
       });
       setIssueHash("");
       setIssueRecipient("");
-    } catch (error: any) {
-      toast.error("Failed to issue certificate", { description: error.message });
+    } catch (error: unknown) {
+      const msg = error instanceof Error ? error.message : "Unknown error";
+      toast.error("Failed to issue certificate", { description: msg });
     } finally {
       setLoading(false);
     }
@@ -56,8 +57,9 @@ export default function AppPage() {
         description: `Tx: ${txHash.slice(0, 8)}...${txHash.slice(-8)}`,
       });
       setRevokeHash("");
-    } catch (error: any) {
-      toast.error("Failed to revoke certificate", { description: error.message });
+    } catch (error: unknown) {
+      const msg = error instanceof Error ? error.message : "Unknown error";
+      toast.error("Failed to revoke certificate", { description: msg });
     } finally {
       setLoading(false);
     }
@@ -76,8 +78,9 @@ export default function AppPage() {
       } else {
         toast.error("Certificate is invalid or does not exist.");
       }
-    } catch (error: any) {
-      toast.error("Verification error", { description: error.message });
+    } catch (error: unknown) {
+      const msg = error instanceof Error ? error.message : "Unknown error";
+      toast.error("Verification error", { description: msg });
     } finally {
       setLoading(false);
     }

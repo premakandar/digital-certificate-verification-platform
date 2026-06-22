@@ -1,11 +1,11 @@
 "use client";
 
 import { useWalletStore } from "@/store/wallet";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Wallet, Network, Activity } from "lucide-react";
 import { useEffect, useState } from "react";
-import { server } from "@/lib/stellar";
+import * as StellarSdk from "@stellar/stellar-sdk";
 
 export default function DashboardPage() {
   const { address, connect } = useWalletStore();
@@ -14,13 +14,18 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if (address) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setLoading(true);
-      server.loadAccount(address)
-        .then((acc) => {
-          const xlmBalance = acc.balances.find((b) => b.asset_type === "native");
+      const horizonServer = new StellarSdk.Horizon.Server("https://horizon-testnet.stellar.org");
+      horizonServer.loadAccount(address)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .then((acc: any) => {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const xlmBalance = acc.balances.find((b: any) => b.asset_type === "native");
           if (xlmBalance) setBalance(xlmBalance.balance);
         })
-        .catch((err) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .catch((err: any) => {
           console.error("Failed to load account:", err);
           setBalance("0");
         })

@@ -1,5 +1,6 @@
 import { create } from 'zustand';
-import { StellarWalletsKit, WalletNetwork, allowAllModules } from '@creit.tech/stellar-wallets-kit';
+import { StellarWalletsKit } from '@creit.tech/stellar-wallets-kit';
+import { FreighterModule } from '@creit.tech/stellar-wallets-kit/modules/freighter';
 
 interface WalletState {
   address: string | null;
@@ -12,9 +13,9 @@ interface WalletState {
 export const useWalletStore = create<WalletState>((set, get) => ({
   address: null,
   kit: new StellarWalletsKit({
-    network: WalletNetwork.TESTNET,
+    network: 'TESTNET' as any,
     selectedWalletId: 'freighter',
-    modules: allowAllModules(),
+    modules: [new FreighterModule()],
   }),
   setAddress: (address) => set({ address }),
   connect: async () => {
