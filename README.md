@@ -1,87 +1,98 @@
-# Digital Certificate Verification Platform
+# Digital Certificate Verification Platform 🎓
 
-## Overview
-A decentralized Digital Certificate Verification platform built on the Stellar network using Soroban Smart Contracts. This platform allows admins to issue and revoke certificates, and anyone to instantly verify a certificate's authenticity.
+A modern, decentralized web application for issuing, verifying, and managing digital certificates using the **Stellar Network** and **Soroban Smart Contracts**.
 
-## Features
-- **Wallet Integration**: Connect multiple Stellar wallets via StellarWalletsKit.
-- **Smart Contract (Soroban)**: Issue, verify, and revoke certificates entirely on-chain.
-- **Real-Time Activity Feed**: Watch certificates being issued and revoked in real-time via Soroban RPC events.
-- **Transaction Tracking**: Comprehensive loading and success/error states for all contract interactions.
-- **Modern UI**: Built with Next.js 15, Tailwind CSS, and shadcn/ui.
+![Landing Page](./public/landing.png)
 
-## Tech Stack
-- **Frontend**: Next.js 15 (App Router), React, TypeScript
-- **Styling**: Tailwind CSS, shadcn/ui
-- **State Management**: Zustand, TanStack Query
-- **Blockchain**: Stellar Network, Soroban SDK, Stellar JavaScript SDK, StellarWalletsKit
+## 🌟 Overview
 
-## Setup Instructions
+The Digital Certificate Verification Platform is designed to prevent credential fraud by leveraging blockchain technology. Educational institutions and certificate authorities can securely issue tamper-proof digital certificates on the Stellar blockchain, which can then be instantly verified by anyone.
 
-### 1. Clone the repository
-```bash
-git clone <repository-url>
-cd digital-certificate-verification-platform
-```
+### Core Features
 
-### 2. Install dependencies
-```bash
-npm install
-```
+- 🔐 **Wallet Integration:** Seamlessly connect using Freighter wallet via `stellar-wallets-kit`.
+- 📜 **Issue Certificates:** Authorized administrators can issue digital certificates anchored to the Stellar blockchain.
+- ✅ **Instant Verification:** Anyone can verify the authenticity and validity status of a certificate by its unique cryptographic hash.
+- 🚫 **Revocation:** Administrators have the ability to revoke certificates if they are issued in error or compromised.
+- 🕒 **Live On-Chain History:** View a real-time history of smart contract interactions powered by the Stellar Horizon API.
 
-### 3. Environment Variables
-Create a `.env.local` file in the root directory:
-```env
-NEXT_PUBLIC_STELLAR_NETWORK=TESTNET
-NEXT_PUBLIC_STELLAR_RPC_URL=https://soroban-testnet.stellar.org
-NEXT_PUBLIC_STELLAR_NETWORK_PASSPHRASE="Test SDF Network ; September 2015"
-NEXT_PUBLIC_CONTRACT_ID=CBZFKTBGZOBA7KWHV3AMMEL7UNK6LE37PWAA3YGPYPXNM7K6WHINEGGO
-```
-*(If you deploy a new contract, replace `CBZFKTBGZOBA7KWHV3AMMEL7UNK6LE37PWAA3YGPYPXNM7K6WHINEGGO` with your new CONTRACT_ADDRESS_HERE).*
+![Activity Dashboard](./public/activity.png)
 
-### 4. Running Locally
-Start the development server:
-```bash
-npm run dev
-```
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+---
 
-## Wallet Setup
-1. Install a Stellar wallet extension like [Freighter](https://www.freighter.app/).
-2. Switch your wallet network to **Testnet**.
-3. Fund your testnet account via the [Stellar Laboratory Faucet](https://laboratory.stellar.org/#account-creator?network=test).
-4. Click "Connect Wallet" in the application navbar to get started.
+## 🏗️ Smart Contract Architecture
 
-## Contract Deployment
-The Soroban smart contract is located in `contracts/digital_cert`.
+The core of the platform is powered by a **Soroban Smart Contract** written in Rust.
 
-To build and deploy your own instance to Testnet:
-```bash
-cd contracts/digital_cert
-cargo build --target wasm32-unknown-unknown --release
+**Contract ID (Stellar Testnet):** 
+[`CBZFKTBGZOBA7KWHV3AMMEL7UNK6LE37PWAA3YGPYPXNM7K6WHINEGGO`](https://stellar.expert/explorer/testnet/contract/CBZFKTBGZOBA7KWHV3AMMEL7UNK6LE37PWAA3YGPYPXNM7K6WHINEGGO)
 
-soroban contract deploy \
-  --wasm target/wasm32-unknown-unknown/release/digital_cert_contract.wasm \
-  --source <YOUR_ADMIN_SECRET_KEY> \
-  --network testnet
-```
-After deployment, take the resulting `Contract ID` and update your `.env.local`.
+![Contract Details](./public/contract.png)
 
-## Example Transaction Hash
-Here is an example transaction hash from testing the contract:
-`TRANSACTION_HASH_HERE`
+### Contract Endpoints
+- `init(admin: Address)`: Initializes the contract and sets the permanent Admin.
+- `issue_cert(hash: String, recipient: Address)`: Issues a new valid certificate (Admin only).
+- `revoke_cert(hash: String)`: Invalidates an existing certificate (Admin only).
+- `verify_cert(hash: String) -> bool`: Checks if a certificate is valid and not revoked.
+- `get_cert(hash: String) -> Certificate`: Retrieves the full on-chain metadata for a certificate.
 
-## Deployment
-This project is optimized for deployment on Vercel.
-1. Push your code to GitHub.
-2. Import the project in your Vercel Dashboard.
-3. Add the Environment Variables listed above in the Vercel settings.
-4. Deploy!
+---
 
-## Git Commit Plan
-Following is the recommended realistic commit plan used while building this project:
+## 💻 Tech Stack
 
-- **Commit 1:** `feat: Project initialization and wallet integration`
-- **Commit 2:** `feat: Smart contract deployment and frontend integration`
-- **Commit 3:** `feat: Real-time events and transaction tracking`
-- **Commit 4:** `chore: UI polish and documentation`
+**Frontend:**
+- [Next.js](https://nextjs.org/) (App Router, React 19)
+- [Tailwind CSS](https://tailwindcss.com/) & [shadcn/ui](https://ui.shadcn.com/)
+- [Zustand](https://zustand-demo.pmnd.rs/) (State management with persistence)
+- [Lucide Icons](https://lucide.dev/)
+
+**Blockchain:**
+- [Stellar SDK](https://github.com/stellar/js-stellar-sdk)
+- [Soroban RPC](https://soroban.stellar.org/)
+- [Stellar Wallets Kit](https://github.com/Creit-Tech/Stellar-Wallets-Kit)
+- [Rust](https://www.rust-lang.org/) (Soroban Smart Contracts)
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- [Node.js](https://nodejs.org/en/) (v18+)
+- [Freighter Wallet](https://www.freighter.app/) Browser Extension
+- Stellar Testnet tokens (for the Freighter wallet)
+
+### Installation
+
+1. **Clone the repository:**
+   ```bash
+   git clone <your-repo-url>
+   cd digital-certificate-verification-platform
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Set up Environment Variables:**
+   Create a `.env.local` file in the root directory:
+   ```env
+   NEXT_PUBLIC_STELLAR_NETWORK=TESTNET
+   NEXT_PUBLIC_STELLAR_RPC_URL=https://soroban-testnet.stellar.org
+   NEXT_PUBLIC_STELLAR_NETWORK_PASSPHRASE="Test SDF Network ; September 2015"
+   NEXT_PUBLIC_CONTRACT_ID=CBZFKTBGZOBA7KWHV3AMMEL7UNK6LE37PWAA3YGPYPXNM7K6WHINEGGO
+   ```
+
+4. **Run the development server:**
+   ```bash
+   npm run dev
+   ```
+
+5. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+---
+
+## 📝 License
+
+This project is licensed under the MIT License.
