@@ -34,7 +34,9 @@
 
 ## 🎥 Demo Video
 
-> 📹 **[▶ Watch Demo on Google Drive / YouTube](#)** *(Upload `demo-rec.mp4` to a video host and paste the link here)*
+[![CertVerify Demo - Decentralized Certificate Verification on Stellar](https://img.youtube.com/vi/HlZ0ikUyPb4/maxresdefault.jpg)](https://youtu.be/HlZ0ikUyPb4)
+
+> 📹 **[▶ Watch on YouTube](https://youtu.be/HlZ0ikUyPb4)**
 
 The demo covers:
 1. Connecting Freighter wallet
