@@ -87,120 +87,123 @@ export default function AppPage() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto space-y-8">
-      <div className="space-y-2">
-        <h1 className="text-3xl font-bold tracking-tight">Certificate Management</h1>
-        <p className="text-muted-foreground">Issue, verify, and revoke digital certificates securely.</p>
-      </div>
+    <div className="section min-h-[80vh] rounded-[16px] md:rounded-[32px] border-4 border-border-default shadow-sticker mb-8 md:mb-20 mt-3 md:mt-6">
+      <div className="section-content max-w-2xl mx-auto space-y-8 p-4 md:p-8 py-8 md:py-12">
+        <div className="space-y-4 text-center">
+          <h1 className="text-[36px] md:text-[44px] font-heading font-extrabold tracking-tight">Certificate Management</h1>
+          <p className="text-[18px] text-body-subtle">Issue, verify, and revoke digital certificates securely.</p>
+        </div>
 
-      <Tabs defaultValue="verify" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="verify">Verify</TabsTrigger>
-          <TabsTrigger value="issue">Issue (Admin)</TabsTrigger>
-          <TabsTrigger value="revoke">Revoke (Admin)</TabsTrigger>
-        </TabsList>
+        <Tabs defaultValue="verify" className="w-full">
+          <TabsList className="flex w-full bg-panel border-2 border-border-default shadow-sticker-sm rounded-xl p-1.5 gap-1 mb-8">
+            <TabsTrigger value="verify" className="flex-1">Verify</TabsTrigger>
+            <TabsTrigger value="issue" className="flex-1">Issue (Authorized)</TabsTrigger>
+            <TabsTrigger value="revoke" className="flex-1">Revoke (Issuer)</TabsTrigger>
+          </TabsList>
 
-        <TabsContent value="verify">
-          <Card>
-            <CardHeader>
-              <CardTitle>Verify Certificate</CardTitle>
-              <CardDescription>Check if a digital certificate is authentic and valid.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="verifyHash">Certificate Hash</Label>
-                <Input 
-                  id="verifyHash" 
-                  placeholder="e.g. 0xabcdef..." 
-                  value={verifyHash}
-                  onChange={(e) => setVerifyHash(e.target.value)}
-                />
-              </div>
-
-              {verificationResult !== null && !loading && (
-                <div className={`p-4 rounded-lg flex items-center gap-4 border ${verificationResult ? 'bg-green-500/10 border-green-500/50 text-green-600 dark:text-green-400' : 'bg-red-500/10 border-red-500/50 text-red-600 dark:text-red-400'}`}>
-                  {verificationResult ? <ShieldCheck className="h-6 w-6" /> : <ShieldAlert className="h-6 w-6" />}
-                  <div>
-                    <p className="font-semibold">{verificationResult ? 'Valid Certificate' : 'Invalid Certificate'}</p>
-                    <p className="text-sm opacity-90">
-                      {verificationResult 
-                        ? 'This certificate is authentic and has not been revoked.' 
-                        : 'This certificate does not exist or has been revoked by the issuer.'}
-                    </p>
-                  </div>
+          <TabsContent value="verify">
+            <Card>
+              <CardHeader>
+                <CardTitle>Verify Certificate</CardTitle>
+                <CardDescription>Check if a digital certificate is authentic and valid.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="verifyHash">Certificate Hash</Label>
+                  <Input 
+                    id="verifyHash" 
+                    placeholder="e.g. 0xabcdef..." 
+                    value={verifyHash}
+                    onChange={(e) => setVerifyHash(e.target.value)}
+                  />
                 </div>
-              )}
-            </CardContent>
-            <CardFooter>
-              <Button onClick={handleVerify} disabled={loading || !verifyHash} className="w-full">
-                {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <FileSearch className="mr-2 h-4 w-4" />}
-                Verify Now
-              </Button>
-            </CardFooter>
-          </Card>
-        </TabsContent>
 
-        <TabsContent value="issue">
-          <Card>
-            <CardHeader>
-              <CardTitle>Issue Certificate</CardTitle>
-              <CardDescription>Issue a new digital certificate to a recipient. Requires Admin privileges.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="issueHash">Certificate Hash</Label>
-                <Input 
-                  id="issueHash" 
-                  placeholder="e.g. 0xabcdef..." 
-                  value={issueHash}
-                  onChange={(e) => setIssueHash(e.target.value)}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="issueRecipient">Recipient Address</Label>
-                <Input 
-                  id="issueRecipient" 
-                  placeholder="G..." 
-                  value={issueRecipient}
-                  onChange={(e) => setIssueRecipient(e.target.value)}
-                />
-              </div>
-            </CardContent>
-            <CardFooter>
-              <Button onClick={handleIssue} disabled={loading || !issueHash || !issueRecipient || !address} className="w-full">
-                {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Issue Certificate
-              </Button>
-            </CardFooter>
-          </Card>
-        </TabsContent>
+                {verificationResult !== null && !loading && (
+                  <div className={`p-4 rounded-lg flex items-center gap-4 border ${verificationResult ? 'bg-success-soft border-success/50 text-success' : 'bg-danger-soft border-danger/50 text-danger'}`}>
+                    {verificationResult ? <ShieldCheck className="h-6 w-6 shrink-0" /> : <ShieldAlert className="h-6 w-6 shrink-0" />}
+                    <div>
+                      <p className="font-semibold">{verificationResult ? 'Valid Certificate' : 'Invalid Certificate'}</p>
+                      <p className="text-sm opacity-90">
+                        {verificationResult 
+                          ? 'This certificate is authentic and has not been revoked.' 
+                          : 'This certificate does not exist or has been revoked by the issuer.'}
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+              <CardFooter>
+                <Button onClick={handleVerify} disabled={loading || !verifyHash} className="w-full">
+                  {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <FileSearch className="mr-2 h-4 w-4" />}
+                  Verify Now
+                </Button>
+              </CardFooter>
+            </Card>
+          </TabsContent>
 
-        <TabsContent value="revoke">
-          <Card>
-            <CardHeader>
-              <CardTitle>Revoke Certificate</CardTitle>
-              <CardDescription>Revoke an existing digital certificate. Requires Admin privileges.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="revokeHash">Certificate Hash</Label>
-                <Input 
-                  id="revokeHash" 
-                  placeholder="e.g. 0xabcdef..." 
-                  value={revokeHash}
-                  onChange={(e) => setRevokeHash(e.target.value)}
-                />
-              </div>
-            </CardContent>
-            <CardFooter>
-              <Button variant="destructive" onClick={handleRevoke} disabled={loading || !revokeHash || !address} className="w-full">
-                {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Revoke Certificate
-              </Button>
-            </CardFooter>
-          </Card>
-        </TabsContent>
-      </Tabs>
+          <TabsContent value="issue">
+            <Card>
+              <CardHeader>
+                <CardTitle>Issue Certificate</CardTitle>
+                <CardDescription>Issue a new digital certificate to a recipient. Requires Admin privileges.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="issueHash">Certificate Hash</Label>
+                  <Input 
+                    id="issueHash" 
+                    placeholder="e.g. 0xabcdef..." 
+                    value={issueHash}
+                    onChange={(e) => setIssueHash(e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="issueRecipient">Recipient Address</Label>
+                  <Input 
+                    id="issueRecipient" 
+                    placeholder="G..." 
+                    value={issueRecipient}
+                    onChange={(e) => setIssueRecipient(e.target.value)}
+                  />
+                </div>
+              </CardContent>
+              <CardFooter>
+                <Button onClick={handleIssue} disabled={loading || !issueHash || !issueRecipient || !address} className="w-full">
+                  {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  Issue Certificate
+                </Button>
+              </CardFooter>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="revoke">
+            <Card>
+              <CardHeader>
+                <CardTitle>Revoke Certificate</CardTitle>
+                <CardDescription>Revoke an existing digital certificate. Requires Admin privileges.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="revokeHash">Certificate Hash</Label>
+                  <Input 
+                    id="revokeHash" 
+                    placeholder="e.g. 0xabcdef..." 
+                    value={revokeHash}
+                    onChange={(e) => setRevokeHash(e.target.value)}
+                  />
+                </div>
+              </CardContent>
+              <CardFooter>
+                <Button variant="destructive" onClick={handleRevoke} disabled={loading || !revokeHash || !address} className="w-full">
+                  {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  Revoke Certificate
+                </Button>
+              </CardFooter>
+            </Card>
+          </TabsContent>
+        </Tabs>
+      </div>
     </div>
   );
 }
+

@@ -1,6 +1,7 @@
 #![no_std]
 
 use soroban_sdk::{contract, contractimpl, contracttype, Address, Env, String};
+use registry::RegistryContractClient;
 
 #[contracttype]
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -14,7 +15,7 @@ pub struct Certificate {
 
 #[contracttype]
 pub enum DataKey {
-    Admin,
+    RegistryAddress,
     Cert(String), // Certificate hash to Certificate
 }
 
@@ -23,18 +24,24 @@ pub struct DigitalCertContract;
 
 #[contractimpl]
 impl DigitalCertContract {
-    /// Initialize the contract with an admin.
-    pub fn init(env: Env, admin: Address) {
-        if env.storage().instance().has(&DataKey::Admin) {
+    /// Initialize the contract with the registry address.
+    pub fn init(env: Env, registry: Address) {
+        if env.storage().instance().has(&DataKey::RegistryAddress) {
             panic!("already initialized");
         }
-        env.storage().instance().set(&DataKey::Admin, &admin);
+        env.storage().instance().set(&DataKey::RegistryAddress, &registry);
     }
 
-    /// Issue a new certificate. Only the admin can do this.
-    pub fn issue_cert(env: Env, hash: String, recipient: Address) {
-        let admin: Address = env.storage().instance().get(&DataKey::Admin).unwrap();
-        admin.require_auth();
+    /// Issue a new certificate.
+    pub fn issue_cert(env: Env, issuer: Address, hash: String, recipient: Address) {
+        issuer.require_auth();
+
+        let registry_addr: Address = env.storage().instance().get(&DataKey::RegistryAddress).unwrap();
+        let registry_client = RegistryContractClient::new(&env, &registry_addr);
+
+        if !registry_client.is_authorized(&issuer) {
+            panic!("issuer is not authorized");
+        }
 
         let key = DataKey::Cert(hash.clone());
         if env.storage().persistent().has(&key) {
@@ -43,7 +50,7 @@ impl DigitalCertContract {
 
         let cert = Certificate {
             hash: hash.clone(),
-            issuer: admin.clone(),
+            issuer: issuer.clone(),
             recipient: recipient.clone(),
             issued_at: env.ledger().timestamp(),
             is_valid: true,
@@ -55,13 +62,12 @@ impl DigitalCertContract {
         env.events().publish((soroban_sdk::symbol_short!("issued"), hash), recipient);
     }
 
-    /// Revoke a certificate. Only the admin can do this.
+    /// Revoke a certificate. Only the original issuer can do this.
     pub fn revoke_cert(env: Env, hash: String) {
-        let admin: Address = env.storage().instance().get(&DataKey::Admin).unwrap();
-        admin.require_auth();
-
         let key = DataKey::Cert(hash.clone());
         if let Some(mut cert) = env.storage().persistent().get::<_, Certificate>(&key) {
+            cert.issuer.require_auth();
+
             if !cert.is_valid {
                 panic!("certificate already revoked");
             }

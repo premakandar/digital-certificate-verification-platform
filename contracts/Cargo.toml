@@ -1,0 +1,6 @@
+[workspace]
+members = [
+    "digital_cert",
+    "registry"
+]
+resolver = "2"
