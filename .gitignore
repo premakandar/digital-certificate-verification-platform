@@ -47,5 +47,8 @@ contracts/target/
 out.html
 out.css
 
+# Large media files (>50MB — use GitHub Releases or LFS instead)
+public/demo-rec.mp4
+
 # IDE skill/config files
 SKILL.md

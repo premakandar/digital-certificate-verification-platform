@@ -34,9 +34,15 @@
 
 ## 🎥 Demo Video
 
-https://github.com/user-attachments/assets/demo-rec.mp4
+> 📹 **[▶ Watch Demo on Google Drive / YouTube](#)** *(Upload `demo-rec.mp4` to a video host and paste the link here)*
 
-> *Watch the full demo: wallet connection, issuing a certificate, real-time event streaming, verification, and revocation — all on Stellar Testnet.*
+The demo covers:
+1. Connecting Freighter wallet
+2. Issuing a certificate on Stellar Testnet
+3. Verifying and revoking a certificate
+4. Real-time on-chain event streaming
+5. Mobile responsive layout in action
+6. GitHub Actions CI/CD pipeline passing
 
 ---
 
