@@ -1,39 +1,50 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 import { StellarWalletsKit } from '@creit.tech/stellar-wallets-kit';
 import { FreighterModule } from '@creit.tech/stellar-wallets-kit/modules/freighter';
 
 interface WalletState {
   address: string | null;
-  kit: StellarWalletsKit;
   setAddress: (address: string | null) => void;
   connect: () => Promise<void>;
   disconnect: () => void;
 }
 
-export const useWalletStore = create<WalletState>((set, get) => ({
-  address: null,
-  kit: new StellarWalletsKit({
-    network: 'TESTNET' as any,
-    selectedWalletId: 'freighter',
-    modules: [new FreighterModule()],
-  }),
-  setAddress: (address) => set({ address }),
-  connect: async () => {
-    try {
-      const { kit } = get();
-      await kit.openModal({
-        onWalletSelected: async (option) => {
-          kit.setWallet(option.id);
-          const { address } = await kit.getAddress();
+let initialized = false;
+
+export function initWalletKit() {
+  if (typeof window !== 'undefined' && !initialized) {
+    StellarWalletsKit.init({
+      network: 'TESTNET' as any,
+      selectedWalletId: 'freighter',
+      modules: [new FreighterModule()],
+    });
+    initialized = true;
+  }
+}
+
+export const useWalletStore = create<WalletState>()(
+  persist(
+    (set) => ({
+      address: null,
+      setAddress: (address) => set({ address }),
+      connect: async () => {
+        initWalletKit();
+        try {
+          const { address } = await StellarWalletsKit.authModal();
           set({ address });
-        },
-      });
-    } catch (error) {
-      console.error('Failed to connect wallet:', error);
-      throw error;
+        } catch (error) {
+          console.error('Failed to connect wallet:', error);
+          throw error;
+        }
+      },
+      disconnect: () => {
+        StellarWalletsKit.disconnect().catch(console.error);
+        set({ address: null });
+      },
+    }),
+    {
+      name: 'wallet-storage',
     }
-  },
-  disconnect: () => {
-    set({ address: null });
-  },
-}));
+  )
+);

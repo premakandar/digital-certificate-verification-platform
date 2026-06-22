@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
 import { ShieldCheck, FileCheck, Users } from "lucide-react";
 
@@ -15,12 +15,12 @@ export default function Home() {
       </div>
 
       <div className="flex gap-4">
-        <Button asChild size="lg">
-          <Link href="/app">Go to App</Link>
-        </Button>
-        <Button asChild variant="outline" size="lg">
-          <Link href="/dashboard">View Dashboard</Link>
-        </Button>
+        <Link href="/app" className={buttonVariants({ size: "lg" })}>
+          Go to App
+        </Link>
+        <Link href="/dashboard" className={buttonVariants({ variant: "outline", size: "lg" })}>
+          View Dashboard
+        </Link>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16 max-w-5xl">

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useWalletStore } from "@/store/wallet";
+import { useWalletStore, initWalletKit } from "@/store/wallet";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { Activity, FileCheck, History, LayoutDashboard, Wallet } from "lucide-react";
@@ -11,6 +11,8 @@ export function Navbar() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    initWalletKit();
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 
